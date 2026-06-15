@@ -8,7 +8,7 @@
         </title>
         <meta
             name="description"
-            content="NodeScan is a fast, dependency-free TCP port scanner with service fingerprinting for Node.js. Documentation, use cases, and examples."
+            content="NodeScan is a fast, dependency-free TCP and UDP port scanner with service fingerprinting for Node.js. Documentation, use cases, and examples."
         />
         <!-- Emoji favicon, no external assets required -->
         <link
@@ -21,7 +21,7 @@
         <header>
             <h1>🔍 NodeScan</h1>
             <p>
-                A fast, lightweight TCP port scanner with service
+                A fast, lightweight TCP and UDP port scanner with service
                 fingerprinting, built for network administrators and security
                 learners to audit
                 <strong>their own</strong> systems.
@@ -61,6 +61,12 @@
                         descriptors.
                     </li>
                     <li>
+                        <strong>TCP and UDP scanning</strong> — switch transport
+                        with <code>--protocol</code>. UDP probes well-known
+                        services and reports unanswered ports as
+                        <code>open|filtered</code>.
+                    </li>
+                    <li>
                         <strong>Flexible port specs</strong> — mix inclusive
                         ranges and lists: <code>1-1024</code>,
                         <code>80,443,8080</code>, or
@@ -76,14 +82,19 @@
                         timeouts to suit slow, filtered, or distant hosts.
                     </li>
                     <li>
+                        <strong>Rate limiting</strong> — cap how many new probes
+                        start each second with <code>--rate</code> to reduce
+                        network noise and load on the target.
+                    </li>
+                    <li>
                         <strong>Clean output + JSON</strong> — a neatly aligned
                         table for humans, plus structured JSON export for
                         scripts and pipelines.
                     </li>
                     <li>
                         <strong>Featherweight</strong> — built on Node's
-                        built-in <code>net</code> module, with no heavy
-                        dependencies to install or audit.
+                        built-in <code>net</code> and <code>dgram</code>
+                        modules, with no heavy dependencies to install or audit.
                     </li>
                 </ul>
             </section>
@@ -227,6 +238,21 @@
                 </p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 10.0.0.5 <span class="tok-flag">--ports</span> 1-65535 <span class="tok-flag">--concurrency</span> 200 <span class="tok-flag">--timeout</span> 1500</code></pre>
 
+                <h3>Scan UDP ports</h3>
+                <p>
+                    Switch to UDP with <code>--protocol</code>. Tailored probes
+                    are sent to common services (DNS, NTP); ports that never
+                    reply are reported as <code>open|filtered</code>.
+                </p>
+                <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 192.168.1.1 <span class="tok-flag">--protocol</span> udp <span class="tok-flag">--ports</span> 53,123,161</code></pre>
+
+                <h3>Limit the scan rate</h3>
+                <p>
+                    Cap how many new probes start each second across all workers
+                    to keep the scan quiet and gentle on the target.
+                </p>
+                <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 192.168.1.1 <span class="tok-flag">--ports</span> 1-1024 <span class="tok-flag">--rate</span> 50</code></pre>
+
                 <h3>Export results to JSON</h3>
                 <p>Great for diffing scans or feeding other tools.</p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 192.168.1.1 <span class="tok-flag">--ports</span> 1-1024 <span class="tok-flag">--output</span> results.json</code></pre>
@@ -255,6 +281,15 @@
                             <td><code>1-1024</code></td>
                         </tr>
                         <tr>
+                            <td><code>--protocol</code></td>
+                            <td><code>-P</code></td>
+                            <td>
+                                Transport protocol (<code>tcp</code> or
+                                <code>udp</code>)
+                            </td>
+                            <td><code>tcp</code></td>
+                        </tr>
+                        <tr>
                             <td><code>--concurrency</code></td>
                             <td><code>-c</code></td>
                             <td>Max simultaneous connections</td>
@@ -265,6 +300,12 @@
                             <td><code>-t</code></td>
                             <td>Connection timeout in milliseconds</td>
                             <td><code>2000</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>--rate</code></td>
+                            <td><code>-r</code></td>
+                            <td>Max new probes started per second</td>
+                            <td>unlimited</td>
                         </tr>
                         <tr>
                             <td><code>--output</code></td>
@@ -282,7 +323,7 @@
                 </table>
 
                 <h3>Example output</h3>
-                <pre><code>Scanning 192.168.1.1 (ports 1-1024)...
+                <pre><code>Scanning 192.168.1.1 (TCP ports 1-1024)...
 
 PORT     STATE    SERVICE
 22/tcp   open     SSH (OpenSSH 8.9)
@@ -304,8 +345,10 @@ Scan complete: 4 open ports found in 3.2s</code></pre>
                 <pre><code><span class="tok-keyword">import</span> { <span class="tok-func">scanPorts</span> } <span class="tok-keyword">from</span> <span class="tok-string">"nodescan"</span>;
 
 <span class="tok-keyword">const</span> results = <span class="tok-keyword">await</span> <span class="tok-func">scanPorts</span>(<span class="tok-string">"127.0.0.1"</span>, [<span class="tok-number">22</span>, <span class="tok-number">80</span>, <span class="tok-number">443</span>], {
+  protocol: <span class="tok-string">"tcp"</span>,
   concurrency: <span class="tok-number">50</span>,
   timeout: <span class="tok-number">1500</span>,
+  rate: <span class="tok-number">100</span>,
 });
 
 <span class="tok-keyword">for</span> (<span class="tok-keyword">const</span> r <span class="tok-keyword">of</span> results) {
@@ -341,6 +384,20 @@ Scan complete: 4 open ports found in 3.2s</code></pre>
                         <tr>
                             <td><code>scanPort(host, port, opts)</code></td>
                             <td>Scan a single port and grab its banner.</td>
+                        </tr>
+                        <tr>
+                            <td><code>scanUdpPort(host, port, opts)</code></td>
+                            <td>
+                                Probe a single UDP port and classify it as open,
+                                closed, or open|filtered.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>createRateLimiter(rate)</code></td>
+                            <td>
+                                Build a limiter that spaces probe starts to a
+                                per-second rate.
+                            </td>
                         </tr>
                         <tr>
                             <td><code>parsePorts(spec)</code></td>
@@ -398,6 +455,17 @@ Scan complete: 4 open ports found in 3.2s</code></pre>
                     Concurrency is managed via a bounded connection pool, so you
                     never exceed the configured number of simultaneous
                     connections or overwhelm the host's file-descriptor limits.
+                    An optional <code>--rate</code> limit spaces out how many
+                    new probes start each second to keep network noise down.
+                </p>
+                <p>
+                    UDP scans (<code>--protocol udp</code>) use Node's
+                    <code>dgram</code> module instead. Because UDP is
+                    connectionless, each port is classified by the response: a
+                    datagram reply means <strong>open</strong>, an ICMP
+                    port-unreachable means <strong>closed</strong>, and silence
+                    until the timeout is reported as
+                    <strong>open|filtered</strong> (open or firewalled).
                 </p>
             </section>
 

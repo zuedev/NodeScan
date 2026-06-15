@@ -80,3 +80,8 @@ code {
 .tok-func {
     color: #8250df;
 }
+
+/* normalise body */
+body {
+    margin: 1rem;
+}
