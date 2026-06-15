@@ -36,11 +36,19 @@ docker run --rm ghcr.io/zuedev/nodescan --help
 
 ### Scanning the host's own network
 
-By default the container scans from its own isolated network namespace. To scan the host's interfaces or `localhost`, share the host network:
+By default the container scans from its own isolated network namespace. On **Linux**, share the host network to reach the host's own interfaces or `localhost`:
 
 ```bash
 docker run --rm --network host ghcr.io/zuedev/nodescan --host 127.0.0.1 --ports 1-1024
 ```
+
+> 🪟 **Windows & macOS (Docker Desktop):** `--network host` shares the network of Docker's internal Linux VM — **not** your machine — so `127.0.0.1` won't reach services running on your host. Drop `--network host` and target `host.docker.internal` instead, which Docker Desktop routes to the host:
+>
+> ```bash
+> docker run --rm ghcr.io/zuedev/nodescan --host host.docker.internal --ports 1-1024
+> ```
+>
+> If a service is bound only to `127.0.0.1` on the host (rather than `0.0.0.0`), rebind it to all interfaces so the container can reach it.
 
 ### Saving a JSON report
 

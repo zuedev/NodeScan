@@ -113,11 +113,27 @@
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> ghcr.io/zuedev/nodescan <span class="tok-flag">--host</span> example.com <span class="tok-flag">--ports</span> 1-1024
 <span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> ghcr.io/zuedev/nodescan <span class="tok-flag">--help</span></code></pre>
                 <p>
-                    Scanning the host's own interfaces or <code>localhost</code>
-                    needs the host network — otherwise the scan runs from the
-                    container's isolated namespace:
+                    On <strong>Linux</strong>, scanning the host's own
+                    interfaces or <code>localhost</code> needs the host network
+                    — otherwise the scan runs from the container's isolated
+                    namespace:
                 </p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> <span class="tok-flag">--network</span> host ghcr.io/zuedev/nodescan <span class="tok-flag">--host</span> 127.0.0.1 <span class="tok-flag">--ports</span> 1-1024</code></pre>
+                <p>
+                    🪟 <strong>On Windows &amp; macOS (Docker Desktop)</strong>,
+                    <code>--network host</code> shares the network of Docker's
+                    internal Linux VM — <em>not</em> your machine — so
+                    <code>127.0.0.1</code> won't reach services running on your
+                    host. Drop <code>--network host</code> and target
+                    <code>host.docker.internal</code> instead, which Docker
+                    Desktop routes to the host:
+                </p>
+                <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> ghcr.io/zuedev/nodescan <span class="tok-flag">--host</span> host.docker.internal <span class="tok-flag">--ports</span> 1-1024</code></pre>
+                <p>
+                    If a service is bound only to <code>127.0.0.1</code> on the
+                    host (rather than <code>0.0.0.0</code>), rebind it to all
+                    interfaces so the container can reach it.
+                </p>
                 <p>
                     Save a JSON or HTML report by mounting a writable directory
                     and writing into it — a <code>.html</code> extension
