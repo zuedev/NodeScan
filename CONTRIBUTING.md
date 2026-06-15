@@ -32,7 +32,7 @@ When filing an issue, please include:
 
 ## Development setup
 
-Requirements: Node.js **>= 16**.
+Requirements: Node.js **>= 25**.
 
 ```bash
 git clone https://github.com/zuedev/nodescan.git
@@ -79,7 +79,7 @@ npm test
 
 ## Coding guidelines
 
-- The project uses **ES modules** (`import`/`export`) and targets Node.js >= 16.
+- The project uses **ES modules** (`import`/`export`) and targets Node.js >= 25.
 - Keep NodeScan **dependency-free** — prefer Node's built-in modules (`net`, `fs`, etc.). Open an issue first if you believe a dependency is genuinely needed.
 - Match the existing style: clear names, small focused functions, and exported logic that can be unit-tested without real network calls.
 - Add tests for new behavior and keep the suite green.
