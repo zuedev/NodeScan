@@ -87,9 +87,10 @@
                         network noise and load on the target.
                     </li>
                     <li>
-                        <strong>Clean output + JSON</strong> — a neatly aligned
-                        table for humans, plus structured JSON export for
-                        scripts and pipelines.
+                        <strong>Clean output, JSON &amp; HTML</strong> — a
+                        neatly aligned table for humans, structured JSON export
+                        for scripts and pipelines, plus a self-contained, styled
+                        HTML report you can open in any browser.
                     </li>
                     <li>
                         <strong>Featherweight</strong> — built on Node's
@@ -118,8 +119,9 @@
                 </p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> <span class="tok-flag">--network</span> host ghcr.io/zuedev/nodescan <span class="tok-flag">--host</span> 127.0.0.1 <span class="tok-flag">--ports</span> 1-1024</code></pre>
                 <p>
-                    Save a JSON report by mounting a writable directory and
-                    writing into it:
+                    Save a JSON or HTML report by mounting a writable directory
+                    and writing into it — a <code>.html</code> extension
+                    produces an HTML report, any other writes JSON:
                 </p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">docker</span> run <span class="tok-flag">--rm</span> <span class="tok-flag">-v</span> <span class="tok-string">"${PWD}:/data"</span> ghcr.io/zuedev/nodescan <span class="tok-flag">-h</span> example.com <span class="tok-flag">-p</span> 1-1024 <span class="tok-flag">-o</span> /data/results.json
 <span class="tok-comment"># On Linux, add --user "$(id -u):$(id -g)" so the file is owned by you.</span></code></pre>
@@ -257,6 +259,16 @@
                 <p>Great for diffing scans or feeding other tools.</p>
                 <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 192.168.1.1 <span class="tok-flag">--ports</span> 1-1024 <span class="tok-flag">--output</span> results.json</code></pre>
 
+                <h3>Export an HTML report</h3>
+                <p>
+                    A <code>.html</code> (or <code>.htm</code>) extension writes
+                    a self-contained, styled report you can open in any browser;
+                    any other extension writes JSON. Banner text is
+                    HTML-escaped, so reports are safe to open even after
+                    scanning untrusted hosts.
+                </p>
+                <pre><code><span class="tok-prompt">$</span> <span class="tok-cmd">node</span> scanner.js <span class="tok-flag">--host</span> 192.168.1.1 <span class="tok-flag">--ports</span> 1-1024 <span class="tok-flag">--output</span> report.html</code></pre>
+
                 <h3>Options</h3>
                 <table>
                     <thead>
@@ -310,7 +322,10 @@
                         <tr>
                             <td><code>--output</code></td>
                             <td><code>-o</code></td>
-                            <td>Export results to a JSON file</td>
+                            <td>
+                                Export results to a file (<code>.html</code> →
+                                HTML report, otherwise JSON)
+                            </td>
                             <td>none</td>
                         </tr>
                         <tr>
@@ -418,6 +433,13 @@ Scan complete: 4 open ports found in 3.2s</code></pre>
                             <td>
                                 Produce the JSON structure used by
                                 <code>--output</code>.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>buildHtmlReport(params)</code></td>
+                            <td>
+                                Render a self-contained HTML report from a
+                                scan's results.
                             </td>
                         </tr>
                         <tr>
