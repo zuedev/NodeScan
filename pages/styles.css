@@ -85,3 +85,12 @@ code {
 body {
     margin: 1rem;
 }
+
+/* max margin and center */
+@media (min-width: 40rem) {
+    body {
+        max-width: 40rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
