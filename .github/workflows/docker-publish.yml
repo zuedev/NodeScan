@@ -1,0 +1,82 @@
+name: Publish Docker image
+
+# Build the container image and publish it to the GitHub Container Registry
+# (ghcr.io). Pushes to the default branch and version tags are published;
+# pull requests build the image only (no push) to validate Dockerfile changes.
+# Can also be triggered manually from the Actions tab.
+on:
+    push:
+        branches: [main]
+        tags: ["v*"]
+    pull_request:
+    workflow_dispatch:
+
+# Least-privilege: read the repo to build, and write packages to push the image.
+permissions:
+    contents: read
+    packages: write
+
+# Avoid redundant builds: a newer commit on the same ref supersedes an older,
+# still-running build. Tags each have a unique ref, so releases aren't cancelled.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+env:
+    REGISTRY: ghcr.io
+    # Image repository, e.g. ghcr.io/zuedev/nodescan. docker/metadata-action
+    # lowercases this automatically as required by the registry.
+    IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+    build-and-push:
+        name: Build and push
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            # QEMU + Buildx enable building for architectures other than the runner's.
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            # Log in only when we intend to push. Pull requests (including from forks)
+            # skip this because they have no registry credentials and don't publish.
+            - name: Log in to the Container registry
+              if: github.event_name != 'pull_request'
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            # Derive tags and OCI labels from Git context (branch, tag, SHA, semver).
+            - name: Extract metadata (tags, labels)
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      type=ref,event=branch
+                      type=ref,event=pr
+                      type=semver,pattern={{version}}
+                      type=semver,pattern={{major}}.{{minor}}
+                      type=semver,pattern={{major}}
+                      type=sha
+                      type=raw,value=latest,enable={{is_default_branch}}
+
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  platforms: linux/amd64,linux/arm64
+                  # Build on every event, but only publish when it isn't a pull request.
+                  push: ${{ github.event_name != 'pull_request' }}
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  # Reuse layers between runs to speed up builds.
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max

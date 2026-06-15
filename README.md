@@ -23,7 +23,44 @@ A fast, lightweight port scanner with service fingerprinting, built in Node.js. 
 
 ---
 
-## 📦 Installation
+## 🐳 Run with Docker (recommended)
+
+The quickest way to run NodeScan is the pre-built image on the GitHub Container Registry — no Node.js install or clone required. Any flags after the image name are passed straight to the scanner:
+
+```bash
+docker run --rm ghcr.io/zuedev/nodescan --host example.com --ports 1-1024
+docker run --rm ghcr.io/zuedev/nodescan --help
+```
+
+### Scanning the host's own network
+
+By default the container scans from its own isolated network namespace. To scan the host's interfaces or `localhost`, share the host network:
+
+```bash
+docker run --rm --network host ghcr.io/zuedev/nodescan --host 127.0.0.1 --ports 1-1024
+```
+
+### Saving a JSON report
+
+Mount a writable directory and write the report into it:
+
+```bash
+docker run --rm -v "${PWD}:/data" ghcr.io/zuedev/nodescan -h example.com -p 1-1024 -o /data/results.json
+# On Linux, add --user "$(id -u):$(id -g)" so the file is owned by you.
+```
+
+### Building the image yourself
+
+From a clone of the repo:
+
+```bash
+docker build -t nodescan .
+docker run --rm nodescan --host example.com --ports 1-1024
+```
+
+---
+
+## 📦 Install from source
 
 ```bash
 git clone https://github.com/yourusername/nodescan.git
@@ -40,6 +77,8 @@ npm install -g .
 ---
 
 ## 🚀 Usage
+
+> 💡 **Using Docker?** Replace `node scanner.js` with `docker run --rm ghcr.io/zuedev/nodescan` in any example below.
 
 ### Basic scan
 

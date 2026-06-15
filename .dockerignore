@@ -1,0 +1,20 @@
+# Keep the Docker build context small — only package.json and scanner.js are
+# copied into the image, so everything else is irrelevant to the build.
+.git
+.github
+.vscode
+node_modules
+npm-debug.log*
+pages
+*.md
+*.bat
+scanner.test.js
+.editorconfig
+.gitignore
+.gitattributes
+.gitinfo
+CODEOWNERS
+LICENSE
+Dockerfile
+.dockerignore
+results*.json
