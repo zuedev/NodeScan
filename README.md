@@ -19,8 +19,8 @@ A fast, lightweight port scanner with service fingerprinting, built in Node.js. 
 - 🎯 **Port range support** (e.g., `1-1024`, `80,443,8080`)
 - 🔎 **Service fingerprinting** — identifies common services via banner grabbing
 - ⏱️ **Configurable timeouts** for slow or filtered hosts
-- � **Rate limiting** to reduce network noise (`--rate`)
-- �📊 **Clean tabular output** with optional JSON or HTML export
+- 🛡️ **Rate limiting** to reduce network noise (`--rate`)
+- 📊 **Clean tabular output** with optional JSON or HTML export
 - 🪶 **Zero heavy dependencies** — uses Node's built-in `net` and `dgram` modules
 
 ---
