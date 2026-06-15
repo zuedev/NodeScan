@@ -15,11 +15,12 @@ A fast, lightweight port scanner with service fingerprinting, built in Node.js. 
 ## ✨ Features
 
 - ⚡ **Concurrent scanning** with configurable connection limits
+- 🌐 **TCP and UDP** scanning (`--protocol tcp|udp`)
 - 🎯 **Port range support** (e.g., `1-1024`, `80,443,8080`)
 - 🔎 **Service fingerprinting** — identifies common services via banner grabbing
 - ⏱️ **Configurable timeouts** for slow or filtered hosts
 - 📊 **Clean tabular output** with optional JSON export
-- 🪶 **Zero heavy dependencies** — uses Node's built-in `net` module
+- 🪶 **Zero heavy dependencies** — uses Node's built-in `net` and `dgram` modules
 
 ---
 
@@ -92,6 +93,16 @@ node scanner.js --host 192.168.1.1 --ports 1-1024
 node scanner.js --host example.com --ports 22,80,443,8080
 ```
 
+### Scan UDP ports
+
+```bash
+node scanner.js --host 192.168.1.1 --protocol udp --ports 53,123,161
+```
+
+UDP is connectionless, so ports that never reply are reported as `open|filtered`
+(open or firewalled) rather than `open`. Tailored probes are sent to common
+services (DNS, NTP) to encourage a response.
+
 ### Adjust concurrency and timeout
 
 ```bash
@@ -112,6 +123,7 @@ node scanner.js --host 192.168.1.1 --ports 1-1024 --output results.json
 | --------------- | ----- | ---------------------------------------- | -------- |
 | `--host`        | `-h`  | Target hostname or IP address (required) | —        |
 | `--ports`       | `-p`  | Port range or comma-separated list       | `1-1024` |
+| `--protocol`    | `-P`  | Transport protocol (`tcp` or `udp`)      | `tcp`    |
 | `--concurrency` | `-c`  | Max simultaneous connections             | `100`    |
 | `--timeout`     | `-t`  | Connection timeout in milliseconds       | `2000`   |
 | `--output`      | `-o`  | Export results to a JSON file            | none     |
@@ -145,6 +157,12 @@ NodeScan uses Node's built-in `net.Socket` to attempt TCP connections against ta
 
 Concurrency is managed via a connection pool to avoid overwhelming the target or the host's file descriptor limits.
 
+UDP scans (`--protocol udp`) use Node's `dgram` module instead. Since UDP has no handshake, each port is classified by the target's response:
+
+- a **datagram reply** → `open`
+- an **ICMP port-unreachable** error → `closed`
+- **silence** until the timeout → `open|filtered` (open or firewalled)
+
 ---
 
 ## 🗺️ Roadmap
@@ -154,7 +172,7 @@ Concurrency is managed via a connection pool to avoid overwhelming the target or
 - [x] Port ranges and lists (`1-1024`, `80,443,8080`)
 - [x] JSON export
 - [x] Test suite backed by a local mock server
-- [ ] UDP scanning support
+- [x] UDP scanning support
 - [ ] Configurable fingerprint database (JSON-based)
 - [ ] CIDR range scanning (e.g., `192.168.1.0/24`)
 - [ ] Rate limiting to reduce network noise
