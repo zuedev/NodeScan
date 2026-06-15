@@ -1,4 +1,4 @@
-# 🔍 NodeScan
+# 🔍 NodeJS-PortScanner
 
 > Speedy port scanner with service fingerprinting for Node.js
 
@@ -27,11 +27,11 @@ A fast, lightweight port scanner with service fingerprinting, built in Node.js. 
 
 ## 🐳 Run with Docker (recommended)
 
-The quickest way to run NodeScan is the pre-built image on the GitHub Container Registry — no Node.js install or clone required. Any flags after the image name are passed straight to the scanner:
+The quickest way to run NodeJS-PortScanner is the pre-built image on the GitHub Container Registry — no Node.js install or clone required. Any flags after the image name are passed straight to the scanner:
 
 ```bash
-docker run --rm ghcr.io/zuedev/nodescan --host example.com --ports 1-1024
-docker run --rm ghcr.io/zuedev/nodescan --help
+docker run --rm ghcr.io/zuedev/nodejs-portscanner --host example.com --ports 1-1024
+docker run --rm ghcr.io/zuedev/nodejs-portscanner --help
 ```
 
 ### Scanning the host's own network
@@ -39,13 +39,13 @@ docker run --rm ghcr.io/zuedev/nodescan --help
 By default the container scans from its own isolated network namespace. On **Linux**, share the host network to reach the host's own interfaces or `localhost`:
 
 ```bash
-docker run --rm --network host ghcr.io/zuedev/nodescan --host 127.0.0.1 --ports 1-1024
+docker run --rm --network host ghcr.io/zuedev/nodejs-portscanner --host 127.0.0.1 --ports 1-1024
 ```
 
 > 🪟 **Windows & macOS (Docker Desktop):** `--network host` shares the network of Docker's internal Linux VM — **not** your machine — so `127.0.0.1` won't reach services running on your host. Drop `--network host` and target `host.docker.internal` instead, which Docker Desktop routes to the host:
 >
 > ```bash
-> docker run --rm ghcr.io/zuedev/nodescan --host host.docker.internal --ports 1-1024
+> docker run --rm ghcr.io/zuedev/nodejs-portscanner --host host.docker.internal --ports 1-1024
 > ```
 >
 > If a service is bound only to `127.0.0.1` on the host (rather than `0.0.0.0`), rebind it to all interfaces so the container can reach it.
@@ -55,7 +55,7 @@ docker run --rm --network host ghcr.io/zuedev/nodescan --host 127.0.0.1 --ports 
 Mount a writable directory and write the report into it:
 
 ```bash
-docker run --rm -v "${PWD}:/data" ghcr.io/zuedev/nodescan -h example.com -p 1-1024 -o /data/results.json
+docker run --rm -v "${PWD}:/data" ghcr.io/zuedev/nodejs-portscanner -h example.com -p 1-1024 -o /data/results.json
 # On Linux, add --user "$(id -u):$(id -g)" so the file is owned by you.
 ```
 
@@ -64,8 +64,8 @@ docker run --rm -v "${PWD}:/data" ghcr.io/zuedev/nodescan -h example.com -p 1-10
 From a clone of the repo:
 
 ```bash
-docker build -t nodescan .
-docker run --rm nodescan --host example.com --ports 1-1024
+docker build -t nodejs-portscanner .
+docker run --rm nodejs-portscanner --host example.com --ports 1-1024
 ```
 
 ---
@@ -73,8 +73,8 @@ docker run --rm nodescan --host example.com --ports 1-1024
 ## 📦 Install from source
 
 ```bash
-git clone https://github.com/yourusername/nodescan.git
-cd nodescan
+git clone https://github.com/yourusername/nodejs-portscanner.git
+cd nodejs-portscanner
 npm install
 ```
 
@@ -88,7 +88,7 @@ npm install -g .
 
 ## 🚀 Usage
 
-> 💡 **Using Docker?** Replace `node scanner.js` with `docker run --rm ghcr.io/zuedev/nodescan` in any example below.
+> 💡 **Using Docker?** Replace `node scanner.js` with `docker run --rm ghcr.io/zuedev/nodejs-portscanner` in any example below.
 
 ### Basic scan
 
@@ -179,7 +179,7 @@ Scan complete: 4 open ports found in 3.2s
 
 ## 🛠️ How It Works
 
-NodeScan uses Node's built-in `net.Socket` to attempt TCP connections against target ports. For each open port, it:
+NodeJS-PortScanner uses Node's built-in `net.Socket` to attempt TCP connections against target ports. For each open port, it:
 
 1. Establishes a connection within the configured timeout.
 2. Attempts **banner grabbing** by reading initial server response data.

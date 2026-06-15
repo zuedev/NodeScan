@@ -1,6 +1,6 @@
 {
     "$schema": "https://git.zue.dev/gitinfo/plain/gitinfo.schema.json",
-    "root": "https://github.com/zuedev/NodeScan/",
+    "root": "https://github.com/zuedev/NodeJS-PortScanner/",
     "description": "Speedy port scanner with service fingerprinting for Node.js",
     "tags": [
         "port-scanner",

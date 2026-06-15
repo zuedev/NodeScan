@@ -24,7 +24,7 @@ concurrency:
 
 env:
     REGISTRY: ghcr.io
-    # Image repository, e.g. ghcr.io/zuedev/nodescan. docker/metadata-action
+    # Image repository, e.g. ghcr.io/zuedev/nodejs-portscanner. docker/metadata-action
     # lowercases this automatically as required by the registry.
     IMAGE_NAME: ${{ github.repository }}
 

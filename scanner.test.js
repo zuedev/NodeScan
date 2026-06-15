@@ -613,7 +613,10 @@ test("buildHtmlReport renders a standalone document with open ports", () => {
 
     assert.match(html, /^<!DOCTYPE html>/);
     assert.match(html, /<\/html>\s*$/);
-    assert.match(html, /<title>NodeScan report — 192\.168\.1\.1<\/title>/);
+    assert.match(
+        html,
+        /<title>NodeJS-PortScanner report — 192\.168\.1\.1<\/title>/,
+    );
     // Open ports and their services appear; closed ports do not.
     assert.match(html, /22\/tcp/);
     assert.match(html, /SSH \(OpenSSH 8\.9\)/);
@@ -783,7 +786,7 @@ test("runCli writes a JSON report when --output is given", async () => {
     });
     const outFile = join(
         tmpdir(),
-        `nodescan-test-${process.pid}-${Date.now()}.json`,
+        `nodejs-portscanner-test-${process.pid}-${Date.now()}.json`,
     );
     const { io } = makeIo();
     try {
@@ -819,7 +822,7 @@ test("runCli writes an HTML report when --output ends in .html", async () => {
     });
     const outFile = join(
         tmpdir(),
-        `nodescan-test-${process.pid}-${Date.now()}.html`,
+        `nodejs-portscanner-test-${process.pid}-${Date.now()}.html`,
     );
     const { io, out } = makeIo();
     try {

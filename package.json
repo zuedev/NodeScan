@@ -1,27 +1,27 @@
 {
-  "name": "nodescan",
-  "version": "0.0.1",
-  "description": "Speedy port scanner with service fingerprinting for Node.js",
-  "type": "module",
-  "main": "scanner.js",
-  "bin": {
-    "nodescan": "scanner.js"
-  },
-  "scripts": {
-    "start": "node scanner.js",
-    "test": "node --test"
-  },
-  "keywords": [
-    "port-scanner",
-    "tcp",
-    "network",
-    "security",
-    "fingerprinting",
-    "cli"
-  ],
-  "author": "Alex (@zuedev) <zuedev@gmail.com>",
-  "license": "Unlicense",
-  "engines": {
-    "node": ">=25.0.0"
-  }
+    "name": "nodejs-portscanner",
+    "version": "0.0.1",
+    "description": "Speedy port scanner with service fingerprinting for Node.js",
+    "type": "module",
+    "main": "scanner.js",
+    "bin": {
+        "nodejs-portscanner": "scanner.js"
+    },
+    "scripts": {
+        "start": "node scanner.js",
+        "test": "node --test"
+    },
+    "keywords": [
+        "port-scanner",
+        "tcp",
+        "network",
+        "security",
+        "fingerprinting",
+        "cli"
+    ],
+    "author": "Alex (@zuedev) <zuedev@gmail.com>",
+    "license": "Unlicense",
+    "engines": {
+        "node": ">=25.0.0"
+    }
 }

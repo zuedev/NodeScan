@@ -1,6 +1,6 @@
-# Contributing to NodeScan
+# Contributing to NodeJS-PortScanner
 
-Thanks for your interest in improving NodeScan! This project is a small, dependency-free TCP port scanner, and contributions of all sizes are welcome.
+Thanks for your interest in improving NodeJS-PortScanner! This project is a small, dependency-free TCP port scanner, and contributions of all sizes are welcome.
 
 This guide describes a simple issue-and-pull-request workflow. Please read it before opening a pull request.
 
@@ -10,7 +10,7 @@ Be respectful and constructive. Assume good intent, keep discussion focused on t
 
 ## Responsible use
 
-NodeScan is a security tool. Only ever test it against systems you own or have explicit written permission to scan. Do not open issues or pull requests that include scan data from third-party systems, and never use the project to facilitate unauthorized scanning. See the legal disclaimer in the [README](README.md) for details.
+NodeJS-PortScanner is a security tool. Only ever test it against systems you own or have explicit written permission to scan. Do not open issues or pull requests that include scan data from third-party systems, and never use the project to facilitate unauthorized scanning. See the legal disclaimer in the [README](README.md) for details.
 
 ## Ways to contribute
 
@@ -35,8 +35,8 @@ When filing an issue, please include:
 Requirements: Node.js **>= 25**.
 
 ```bash
-git clone https://github.com/zuedev/nodescan.git
-cd nodescan
+git clone https://github.com/zuedev/nodejs-portscanner.git
+cd nodejs-portscanner
 npm install
 ```
 
@@ -56,15 +56,15 @@ npm test
 
 1. **Open or comment on an issue** describing the change.
 2. **Fork** the repository and create a topic branch from `main`:
-   ```bash
-   git checkout -b fix/short-description
-   ```
+    ```bash
+    git checkout -b fix/short-description
+    ```
 3. **Make your change.** Keep pull requests focused on a single concern.
 4. **Add or update tests** in `scanner.test.js` to cover your change.
 5. **Run the suite** and make sure everything passes:
-   ```bash
-   npm test
-   ```
+    ```bash
+    npm test
+    ```
 6. **Commit** with a clear message and **push** your branch.
 7. **Open a pull request** against `main`. Reference the related issue (e.g. `Closes #12`) and describe what changed and why.
 
@@ -80,7 +80,7 @@ npm test
 ## Coding guidelines
 
 - The project uses **ES modules** (`import`/`export`) and targets Node.js >= 25.
-- Keep NodeScan **dependency-free** — prefer Node's built-in modules (`net`, `fs`, etc.). Open an issue first if you believe a dependency is genuinely needed.
+- Keep NodeJS-PortScanner **dependency-free** — prefer Node's built-in modules (`net`, `fs`, etc.). Open an issue first if you believe a dependency is genuinely needed.
 - Match the existing style: clear names, small focused functions, and exported logic that can be unit-tested without real network calls.
 - Add tests for new behavior and keep the suite green.
 
