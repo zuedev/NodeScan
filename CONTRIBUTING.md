@@ -84,4 +84,4 @@ npm test
 - Match the existing style: clear names, small focused functions, and exported logic that can be unit-tested without real network calls.
 - Add tests for new behavior and keep the suite green.
 
-By contributing, you agree that your contributions will be licensed under the project's [MIT License](LICENSE).
+By contributing, you agree that your contributions will be released into the public domain under the project's [Unlicense](LICENSE).

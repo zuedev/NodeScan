@@ -73,7 +73,7 @@ docker run --rm nodejs-portscanner --host example.com --ports 1-1024
 ## 📦 Install from source
 
 ```bash
-git clone https://github.com/yourusername/nodejs-portscanner.git
+git clone https://github.com/zuedev/nodejs-portscanner.git
 cd nodejs-portscanner
 npm install
 ```
