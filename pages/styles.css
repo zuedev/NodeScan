@@ -87,9 +87,9 @@ body {
 }
 
 /* max margin and center */
-@media (min-width: 40rem) {
+@media (min-width: 50rem) {
     body {
-        max-width: 40rem;
+        max-width: 50rem;
         margin-left: auto;
         margin-right: auto;
     }
