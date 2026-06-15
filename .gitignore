@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Scan output / reports
+results.json
+*.scan.json
+
+# Environment & editor
+.env
+.DS_Store
+.idea/
+.vscode/
+
+# Coverage / build artifacts
+coverage/
+*.tgz

@@ -1,0 +1,37 @@
+name: Tests
+
+# Run the test suite on every push, and on pull requests so the
+# review-before-merge policy can require checks to pass.
+on:
+  push:
+  pull_request:
+
+# Least-privilege: the test job only needs to read the repository.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: node --test
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # package.json requires Node >= 25. Add more versions here as needed.
+        node-version: [25.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
